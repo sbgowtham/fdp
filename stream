@@ -1,0 +1,24 @@
+Scala Streaming 
+
+nc -lk 9999
+====================================================================================================
+
+import org.apache.spark.SparkConf
+import org.apache.spark.streaming.{Seconds, StreamingContext}
+
+val conf = new SparkConf().setAppName("ProductStreaming").setMaster("local[2]")
+sc.stop
+val ssc = new StreamingContext(conf, Seconds(5))
+
+val linesDStream = ssc.socketTextStream("localhost", 9999)
+
+val productsDStream = linesDStream.map(line => line.split(","))
+
+val typePricePairs = productsDStream.map(fields => (fields(2), fields(3).toDouble))
+
+val aggregatedPrices = typePricePairs.reduceByKey(_ + _)
+
+aggregatedPrices.print()
+
+ssc.start()
+ssc.awaitTermination()
