@@ -1,0 +1,138 @@
+from pyspark.sql import functions as F
+
+# Path to your Zomato CSV file
+csv_file_path = "/zomato_sample.csv"
+
+# Read CSV into a DataFrame
+zomato_df = (
+    spark.read
+    .option("header", True)       # File has a header row
+    .option("inferSchema", True)  # Infer column types
+    .csv(csv_file_path)
+)
+
+# Check the schema
+zomato_df.printSchema()
+
+# Preview some rows
+zomato_df.show(5, truncate=False)
+
+
+4. Basic Exploration
+Check data statistics (count, mean, std dev, etc.):
+
+zomato_df.describe().show()
+
+Check row count:
+zomato_df.count()
+
+
+Check distinct cities:
+
+zomato_df.select("city").distinct().show()
+
+
+5. Data Cleaning & Transformation
+5.1. Handling Missing or Invalid Data
+Suppose we want to drop rows where aggregate_rating or votes are NULL:
+
+cleaned_df = zomato_df.dropna(subset=["aggregate_rating", "votes"])
+
+If you need to remove duplicates:
+
+cleaned_df = cleaned_df.dropDuplicates(["restaurant_id"])
+
+
+5.2. Convert “Yes”/”No” to Boolean
+We can create new boolean columns for table booking and online delivery:
+
+cleaned_df = cleaned_df.withColumn(
+    "has_table_booking_bool",
+    F.when(F.col("has_table_booking") == "Yes", F.lit(True)).otherwise(F.lit(False))
+)
+
+cleaned_df = cleaned_df.withColumn(
+    "has_online_delivery_bool",
+    F.when(F.col("has_online_delivery") == "Yes", F.lit(True)).otherwise(F.lit(False))
+)
+5.3. Inspect the transformed DataFrame
+
+cleaned_df.printSchema()
+cleaned_df.show(5, truncate=False)
+
+
+6. Analytics / Aggregations
+6.1. Average Rating by City
+
+avg_rating_by_city = (
+    cleaned_df
+    .groupBy("city")
+    .agg(
+        F.count("*").alias("num_restaurants"),
+        F.avg("aggregate_rating").alias("avg_rating")
+    )
+    .orderBy(F.desc("avg_rating"))
+)
+
+avg_rating_by_city.show(truncate=False)
+
+
+
+6.2. Cost vs. Rating
+If we want to see the relationship between average cost for two and rating, grouped by city:
+
+cost_rating = (
+    cleaned_df
+    .groupBy("city")
+    .agg(
+        F.avg("average_cost_for_two").alias("avg_cost_for_two"),
+        F.avg("aggregate_rating").alias("avg_rating")
+    )
+    .orderBy(F.desc("avg_rating"))
+)
+cost_rating.show(truncate=False)
+
+
+6.3. Popular Cuisines (by Votes)
+Let’s see which cuisines have the most votes:
+
+# Split multiple cuisines and explode them
+split_cuisines_df = cleaned_df.withColumn(
+    "cuisine",
+    F.explode(F.split(F.col("cuisines"), ",\\s*"))
+)
+
+popular_cuisines = (
+    split_cuisines_df
+    .groupBy("cuisine")
+    .agg(
+        F.sum("votes").alias("total_votes"),
+        F.avg("aggregate_rating").alias("avg_rating")
+    )
+    .orderBy(F.desc("total_votes"))
+)
+popular_cuisines.show(10, truncate=False)
+
+
+
+7. Save/Export the Results
+You might want to store the final aggregated results in Parquet (or CSV, or a Hive table):
+
+7.1. Save to Parquet
+
+output_path = "/path/to/output/avg_rating_by_city"
+
+avg_rating_by_city.write.mode("overwrite").parquet(output_path)
+
+
+
+7.2. (Optional) Save to Hive
+If your Spark is configured with Hive support (with a Hive metastore accessible), you can do:
+
+spark.sql("CREATE DATABASE IF NOT EXISTS zomato_db")
+
+# Save as a managed table in 'zomato_db'
+avg_rating_by_city.write.mode("overwrite").saveAsTable("zomato_db.avg_rating_by_city")
+
+
+spark.sql("SELECT * FROM zomato_db.avg_rating_by_city").show()
