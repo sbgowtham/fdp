@@ -28,5 +28,5 @@ print("Take 2:", filtered_rdd.take(2))
 
 Saving an RDD to Disk
 
-output_path = "file:///home/user/rdd_output"
+output_path = "/rdd_output"
 filtered_rdd.saveAsTextFile(output_path)
