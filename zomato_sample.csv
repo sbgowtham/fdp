@@ -1,0 +1,21 @@
+restaurant_id,restaurant_name,city,cuisines,average_cost_for_two,currency,has_table_booking,has_online_delivery,aggregate_rating,votes
+1,Ruchis Kitchen,Bangalore,South Indian & Chinese,450,INR,No,Yes,4.2,315
+2,Sharma Biryani House,Hyderabad,Biryani & Mughlai,700,INR,Yes,Yes,4.5,1100
+3,Annapurna Foods,Chennai,South Indian & North Indian,300,INR,No,No,3.8,150
+4,Bombay Street Cafe,Mumbai,Street Food & Fast Food,400,INR,No,Yes,4.0,650
+5,Golden Punjab,Delhi,North Indian & Punjabi,600,INR,Yes,No,4.1,700
+6,GupShup Chaat Corner,Lucknow,Chaat & Fast Food,200,INR,No,No,3.9,180
+7,Haveli Dhaba,Chandigarh,North Indian & Tandoori,550,INR,Yes,No,4.3,220
+8,Namaste Kolkata,Kolkata,Bengali & Seafood,500,INR,No,Yes,4.4,365
+9,Swadist Sweets,Jaipur,Sweets & Desserts,300,INR,No,Yes,4.1,90
+10,Delhi Darbar,Delhi,Mughlai & North Indian,800,INR,Yes,Yes,4.2,1250
+11,Tandoori Flames,Gurgaon,Tandoori & Kebab,750,INR,Yes,No,4.1,400
+12,Udupi Express,Bangalore,South Indian,350,INR,No,No,4.0,250
+13,Chai Junction,Noida,Tea & Snacks,200,INR,No,Yes,3.9,210
+14,Spice Route,Pune,Chinese & Thai,650,INR,Yes,Yes,4.3,320
+15,Nirvana Sizzlers,Ahmedabad,Continental & Sizzlers,900,INR,Yes,No,4.5,210
+16,Curry Masala,Chennai,South Indian & Chettinad,500,INR,No,Yes,4.1,175
+17,Royal Thali,Mumbai,Rajasthani & Gujarati,700,INR,Yes,No,4.4,450
+18,Dakshin Spice,Hyderabad,South Indian & Biryani,600,INR,No,Yes,4.2,760
+19,Punjabi Tadka,Delhi,Punjabi & Fast Food,550,INR,No,Yes,4.0,380
+20,Bong Taste,Kolkata,Bengali & Chinese,450,INR,Yes,No,3.9,95
