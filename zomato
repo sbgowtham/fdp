@@ -6,8 +6,8 @@ csv_file_path = "/zomato_sample.csv"
 # Read CSV into a DataFrame
 zomato_df = (
     spark.read
-    .option("header", True)       # File has a header row
-    .option("inferSchema", True)  # Infer column types
+    .option("header", True)       
+    .option("inferSchema", True)  
     .csv(csv_file_path)
 )
 
