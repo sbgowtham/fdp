@@ -1,0 +1,45 @@
+DataFrame Basics
+
+from pyspark.sql import Row
+
+# Sample data as a list of (id, name, age)
+data = [
+    (1, "Alice", 23),
+    (2, "Bob", 30),
+    (3, "Cathy", 25),
+    (4, "David", 27)
+]
+
+# Define column names
+columns = ["id", "name", "age"]
+
+# Create DataFrame
+df = spark.createDataFrame(data, columns)
+
+# Show the schema
+df.printSchema()
+
+# Show the first few rows
+df.show()
+
+
+# Select specific columns
+df.select("name", "age").show()
+
+# Filter rows
+df.filter(df.age > 25).show()
+
+# Create new column
+df2 = df.withColumn("age_plus_one", df.age + 1)
+df2.show()
+
+# Group and aggregate
+df.groupBy("age").count().show()
+
+
+output_path_parquet = "file:///home/user/df_output_parquet"
+df.write.mode("overwrite").parquet(output_path_parquet)
+
+# Or CSV:
+output_path_csv = "file:///home/user/df_output_csv"
+df.write.mode("overwrite").option("header", True).csv(output_path_csv)
