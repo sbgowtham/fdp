@@ -1,0 +1,32 @@
+RDD
+
+# Create an RDD of integers
+numbers_rdd = sc.parallelize([1, 2, 3, 4, 5])
+
+# Check how many partitions (just for info):
+print("Number of partitions:", numbers_rdd.getNumPartitions())
+
+
+# Multiply each element by 2
+multiplied_rdd = numbers_rdd.map(lambda x: x * 2)
+
+# Filter elements greater than 5
+filtered_rdd = multiplied_rdd.filter(lambda x: x > 5)
+
+# You can chain them:
+# filtered_rdd = numbers_rdd.map(lambda x: x * 2).filter(lambda x: x > 5)
+
+
+# Collect all elements as a list
+print("Collect:", filtered_rdd.collect())
+
+# Count how many elements
+print("Count:", filtered_rdd.count())
+
+# Take a few elements
+print("Take 2:", filtered_rdd.take(2))
+
+Saving an RDD to Disk
+
+output_path = "file:///home/user/rdd_output"
+filtered_rdd.saveAsTextFile(output_path)
